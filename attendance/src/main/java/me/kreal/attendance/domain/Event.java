@@ -11,7 +11,6 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
 @Entity
 @Table(name = "event")
 public class Event {
@@ -35,4 +34,13 @@ public class Event {
     @Column(name = "event_name")
     private String eventName;
 
+    @Override
+    public String toString() {
+        return "Event{" +
+                "eventId=" + eventId +
+                ", attendanceId=" + attendanceId +
+                ", eventTime=" + eventTime +
+                ", eventName='" + eventName + '\'' +
+                '}';
+    }
 }

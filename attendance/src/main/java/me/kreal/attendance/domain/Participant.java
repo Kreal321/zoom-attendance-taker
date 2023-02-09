@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
 @Entity
 @Table(name = "participant")
 public class Participant {
@@ -38,4 +37,15 @@ public class Participant {
     @Column(name = "preferred_name")
     private String preferredName;
 
+    @Override
+    public String toString() {
+        return "Participant{" +
+                "participantUuid='" + participantUuid + '\'' +
+                ", email='" + email + '\'' +
+                ", userName='" + userName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", preferredName='" + preferredName + '\'' +
+                '}';
+    }
 }

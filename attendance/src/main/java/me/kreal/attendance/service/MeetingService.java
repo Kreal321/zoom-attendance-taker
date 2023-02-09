@@ -8,6 +8,7 @@ import me.kreal.attendance.domain.Meeting;
 import me.kreal.attendance.domain.Participant;
 import me.kreal.attendance.repo.MeetingRepo;
 import me.kreal.attendance.request.ZoomRequest;
+import me.kreal.attendance.response.MeetingResponse;
 import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 @Service
 public class MeetingService {
@@ -77,15 +79,14 @@ public class MeetingService {
         return this.saveMeeting(m);
     }
 
-
-
     public void handleZoomRequest(ZoomRequest request) {
 
         Timestamp eventTime = new Timestamp(request.getEvent_ts());
         MeetingDTO meetingDTO = request.getPayload().getObject();
 
-        // fix participant uuid null
-        if (meetingDTO.getParticipant().getParticipant_uuid() == null) meetingDTO.getParticipant().setParticipant_uuid(meetingDTO.getHost_id());
+        ParticipantDTO participantDTO = meetingDTO.getParticipant();
+        // visitor (zoom is not login)
+        if (participantDTO != null && (participantDTO.getParticipant_user_id() == null || participantDTO.getParticipant_user_id().isEmpty())) participantDTO.setParticipant_user_id(participantDTO.getParticipant_uuid());
 
         Meeting m = this.findOrCreateFrom(meetingDTO);
 
@@ -137,4 +138,35 @@ public class MeetingService {
         return "";
 
     }
+
+    public List<MeetingResponse> getAllMeetingsByHostId(String hostId) {
+
+        return this.meetingRepo.findAllByHostIdOrderByStartTimeDesc(hostId).stream()
+                .map(m -> MeetingResponse.builder()
+                            .meetingUuid(m.getMeetingUuid())
+                            .meetingId(m.getMeetingId())
+                            .hostId(m.getHostId())
+                            .topic(m.getTopic())
+                            .type(m.getType())
+                            .startTime(m.getStartTime())
+                            .endTime(m.getEndTime())
+                            .build())
+                .collect(Collectors.toList());
+    }
+
+    public Optional<Meeting> findMeetingByMeetingUuid(String uuid) {
+        return this.meetingRepo.findById(uuid);
+    }
+
+    public Optional<Meeting> findMeetingByMeetingUuidAndHostId(String uuid, String hostId) {
+        return this.meetingRepo.findByMeetingUuidAndHostId(uuid, hostId);
+    }
+
+    public Optional<MeetingResponse> getMeetingDetailByMeetingUuidAndHostId(String uuid, String hostId) {
+        Optional<Meeting> meetingOptional = this.findMeetingByMeetingUuidAndHostId(uuid, hostId);
+
+        return meetingOptional.map(MeetingResponse::new);
+
+    }
+
 }

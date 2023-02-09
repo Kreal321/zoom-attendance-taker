@@ -16,7 +16,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
 @Entity
 @Table(name = "attendance")
 public class Attendance {
@@ -47,4 +46,13 @@ public class Attendance {
     @OneToMany(orphanRemoval = true, mappedBy = "attendance", cascade = CascadeType.ALL)
     private Set<Event> events = new HashSet<>();
 
+    @Override
+    public String toString() {
+        return "Attendance{" +
+                "attendanceId=" + attendanceId +
+                ", meetingUuid='" + meetingUuid + '\'' +
+                ", participantUuid='" + participantUuid + '\'' +
+                ", duration=" + duration +
+                '}';
+    }
 }

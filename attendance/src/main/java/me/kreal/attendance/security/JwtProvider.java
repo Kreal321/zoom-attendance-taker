@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
@@ -38,7 +37,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public Optional<AuthUserDetail> resolveToken(HttpServletRequest request){
+    public Optional<AuthUserDetails> resolveToken(HttpServletRequest request){
 
         try {
 
@@ -57,7 +56,7 @@ public class JwtProvider {
                     .collect(Collectors.toList());
 
             //return a userDetail object with the permissions the user has
-            return Optional.of(AuthUserDetail.builder()
+            return Optional.of(AuthUserDetails.builder()
                     .username(username)
                     .email((String) claims.get("email"))
                     .zoom_id((String) claims.get("zoom_id"))

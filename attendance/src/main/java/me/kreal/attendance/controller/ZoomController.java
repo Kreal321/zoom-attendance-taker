@@ -61,20 +61,44 @@ public class ZoomController {
 
     }
 
-    @GetMapping("/auth")
-    public ModelAndView zoomAuthCode(@RequestParam String code, Model model, RedirectAttributes redirectedAttributes, HttpServletResponse response) {
+    @GetMapping("/oauth2/login")
+    @ResponseBody
+    public ResponseEntity<DataResponse> getZoomLoginLink() {
+        return ResponseEntity.ok(
+                DataResponse.builder()
+                        .success(true)
+                        .data(this.userService.getAuthorizeUrl())
+                        .build()
+        );
+    }
+
+    @GetMapping("/oauth2/token")
+    @ResponseBody
+    public ResponseEntity<DataResponse> setJwtTokenCookie(@RequestParam String code, HttpServletResponse response) {
 
         Optional<String> tokenOptional = this.userService.issueToken(code);
 
         if (!tokenOptional.isPresent()) {
-            return new ModelAndView("redirect:/user/login");
-
+            return ResponseEntity.ok(
+                    DataResponse.builder()
+                            .success(false)
+                            .message("Code is invalided.")
+                            .build()
+            );
         }
 
         Cookie cookie = new Cookie("token", tokenOptional.get());
+        cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);
-        return new ModelAndView("redirect:/home");
+
+        return ResponseEntity.ok(
+                DataResponse.builder()
+                        .success(true)
+                        .message("Token has been issued.")
+                        .data(tokenOptional.get())
+                        .build()
+        );
 
     }
 

@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
 @Entity
 @Table(name = "meeting")
 public class Meeting {
@@ -46,4 +45,17 @@ public class Meeting {
 
     @OneToMany(orphanRemoval = true, mappedBy = "meeting", cascade = CascadeType.ALL)
     private List<Attendance> attendances = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "Meeting{" +
+                "meetingUuid='" + meetingUuid + '\'' +
+                ", meetingId='" + meetingId + '\'' +
+                ", hostId='" + hostId + '\'' +
+                ", topic='" + topic + '\'' +
+                ", type=" + type +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                '}';
+    }
 }

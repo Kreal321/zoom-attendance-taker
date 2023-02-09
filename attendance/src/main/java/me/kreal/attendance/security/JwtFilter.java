@@ -26,21 +26,39 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Optional<AuthUserDetail> authUserDetailOptional = jwtProvider.resolveToken(request); // extract jwt from request, generate a userdetails object
+        Optional<AuthUserDetails> authUserDetailOptional = jwtProvider.resolveToken(request); // extract jwt from request, generate a userdetails object
+
+        String origin = request.getHeader("Origin");
+        response.setHeader("Access-Control-Allow-Origin", origin);
+        response.setHeader("Vary", "Origin");
+
+        // Access-Control-Max-Age
+        response.setHeader("Access-Control-Max-Age", "3600");
+
+        // Access-Control-Allow-Credentials
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
+        // Access-Control-Allow-Methods
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET");
+
+        // Access-Control-Allow-Headers
+        response.setHeader("Access-Control-Allow-Headers",
+                "Origin, X-Requested-With, Content-Type, Accept, " + "X-CSRF-TOKEN");
 
         if (authUserDetailOptional.isPresent()){
-            AuthUserDetail authUserDetail = authUserDetailOptional.get();
+            AuthUserDetails authUserDetails = authUserDetailOptional.get();
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    authUserDetail.getUsername(),
+                    authUserDetails,
                     null,
-                    authUserDetail.getAuthorities()
+                    authUserDetails.getAuthorities()
             ); // generate authentication object
+
+//            authentication.setDetails(authUserDetails);
 
             SecurityContextHolder.getContext().setAuthentication(authentication); // put authentication object in the secruitycontext
             filterChain.doFilter(request, response);
         } else {
-            response.sendRedirect("/user/login");
-//            response.sendRedirect("/error");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "The token is not valid.");
 
         }
 
@@ -50,7 +68,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
         System.out.println(path);
-        return "/user/login".equals(path) || "/signup".equals(path) || path.startsWith("/zoom") || path.startsWith("/error") || path.endsWith(".png") || path.endsWith(".jsp") ||path.endsWith(".css") || path.endsWith(".js");
+        return "/user".equals(path) || path.startsWith("/zoom") || path.startsWith("/error") || path.endsWith(".png") || path.endsWith(".jsp") ||path.endsWith(".css") || path.endsWith(".js");
     }
 
 

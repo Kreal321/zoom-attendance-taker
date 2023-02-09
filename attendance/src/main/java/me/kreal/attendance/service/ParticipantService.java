@@ -34,7 +34,7 @@ public class ParticipantService {
     public Participant createParticipantFromDTO(ParticipantDTO participantDTO) {
 
         Participant participant = Participant.builder()
-                .participantUuid(participantDTO.getParticipant_uuid())
+                .participantUuid(participantDTO.getParticipant_user_id())
                 .email(participantDTO.getEmail())
                 .userName(participantDTO.getUser_name())
                 .build();
@@ -45,7 +45,8 @@ public class ParticipantService {
 
     public Participant findOrCreateFrom(ParticipantDTO participantDTO) {
 
-        Optional<Participant> participantOptional = this.findParticipantByUuid(participantDTO.getParticipant_uuid());
+        // zoom user
+        Optional<Participant> participantOptional = this.findParticipantByUuid(participantDTO.getParticipant_user_id());
 
         // Exist
         if (participantOptional.isPresent()) return participantOptional.get();

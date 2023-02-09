@@ -1,6 +1,5 @@
 package me.kreal.attendance.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import me.kreal.attendance.DTO.ProfileDTO;
 import me.kreal.attendance.DTO.ZoomTokenDTO;
 import me.kreal.attendance.config.ZoomAPI;
@@ -11,6 +10,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
@@ -33,7 +33,7 @@ public class UserService {
         return this.zoomConfig.getGeneratedAuthorizeUrl();
     }
 
-    private Optional<ZoomTokenDTO> getZoomTokenFromCode(String code) {
+    private Optional<ZoomTokenDTO> getZoomTokenFromCode(String code) throws HttpClientErrorException{
         HttpHeaders header = new HttpHeaders();
         header.set("Authorization", this.zoomConfig.getBase64Encoded());
         header.set("Content-Type", "application/x-www-form-urlencoded");
@@ -55,14 +55,19 @@ public class UserService {
     }
 
     private Optional<ProfileDTO> getUserProfile(String code) {
+        try {
+            Optional<ZoomTokenDTO> zoomTokenDTOOptional = this.getZoomTokenFromCode(code);
 
-        Optional<ZoomTokenDTO> zoomTokenDTOOptional = this.getZoomTokenFromCode(code);
+            if (!zoomTokenDTOOptional.isPresent()) return Optional.empty();
 
-        if (!zoomTokenDTOOptional.isPresent()) return Optional.empty();
+            ZoomAPI zoomAPI = new ZoomAPI(zoomTokenDTOOptional.get().getAccess_token());
 
-        ZoomAPI zoomAPI = new ZoomAPI(zoomTokenDTOOptional.get().getAccess_token());
+            return Optional.ofNullable(zoomAPI.getProfile());
+        } catch (HttpClientErrorException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
 
-        return Optional.ofNullable(zoomAPI.getProfile());
     }
 
     public Optional<String> issueToken(String code) {
