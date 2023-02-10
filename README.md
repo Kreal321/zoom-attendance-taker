@@ -2,6 +2,13 @@
 attendance taker for zoom
 
 ## Version
+### Dev 0.3
+1. Redesigned database: add final field for attendance
+2. Redesigned Nav bar
+3. Fix cookies bugs
+4. OAuth authentication works
+5. Implementate meeting all page
+
 ### Dev 0.2
 1. Seperate front-end and back-end
 2. Using sweetAlert

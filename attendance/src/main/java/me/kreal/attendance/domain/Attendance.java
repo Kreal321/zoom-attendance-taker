@@ -43,6 +43,9 @@ public class Attendance {
     @Column
     private Integer duration; // minutes
 
+    @Column(name = "is_final")
+    private Boolean isFinal; // minutes
+
     @OneToMany(orphanRemoval = true, mappedBy = "attendance", cascade = CascadeType.ALL)
     private Set<Event> events = new HashSet<>();
 

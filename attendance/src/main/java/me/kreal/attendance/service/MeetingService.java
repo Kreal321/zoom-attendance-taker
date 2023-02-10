@@ -63,6 +63,7 @@ public class MeetingService {
             isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date date = isoFormat.parse(meetingDTO.getStart_time());
             event_time = new Timestamp(date.getTime());
+            System.out.println(date.getTime());
         } catch (Exception e) {
             e.printStackTrace();
         }

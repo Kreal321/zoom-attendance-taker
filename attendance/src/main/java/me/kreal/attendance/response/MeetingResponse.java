@@ -26,9 +26,9 @@ public class MeetingResponse {
     private String hostId;
     private String topic;
     private Integer type;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone="America/New_York")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a")
     private Timestamp startTime;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone="America/New_York")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a")
     private Timestamp endTime;
     private List<AttendanceResponse> attendances = new ArrayList<>();
 
@@ -40,6 +40,9 @@ public class MeetingResponse {
         this.type = meeting.getType();
         this.startTime = meeting.getStartTime();
         this.endTime = meeting.getEndTime();
+        List<AttendanceResponse> temp = meeting.getAttendances().stream()
+                .map(AttendanceResponse::new)
+                .collect(Collectors.toList());
         this.attendances = meeting.getAttendances().stream()
                                 .map(AttendanceResponse::new)
                                 .collect(Collectors.toList());

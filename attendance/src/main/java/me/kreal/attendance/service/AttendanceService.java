@@ -52,6 +52,7 @@ public class AttendanceService {
                 .participant(participant)
                 .duration(0)
                 .events(new HashSet<>())
+                .isFinal(false)
                 .build();
 
         return this.saveAttendance(attendance);
