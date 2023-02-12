@@ -1,31 +1,10 @@
-const nav = new Nav("meeting.all");
+const nav = new Nav("meeting.detail");
 nav.render();
-
-const table = $("#meeting-table");
-
-
-function convertTimestampToString(ts, tz = "America/New_York") {
-
-    var date = new Date(ts);
-
-    return date.toLocaleString('en-US', { 
-        timeZone: tz,
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        timeZoneName: "short",
-        weekday: "short"
-    });
-
-
-}
-
 
 function load_datatable(reload = false) {
 
 
-    getDataResponse("/meeting/all", (response) => {
+    getDataResponse("/meeting/detail", (response) => {
         console.log(response);
 
         const data = response.data;
@@ -72,5 +51,3 @@ function load_datatable(reload = false) {
 }
 
 load_datatable();
-
-

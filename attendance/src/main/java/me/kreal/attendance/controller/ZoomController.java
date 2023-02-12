@@ -20,7 +20,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
-@Controller
+@RestController
 @CrossOrigin
 @RequestMapping("/zoom")
 public class ZoomController {
@@ -36,7 +36,6 @@ public class ZoomController {
 
 
     @GetMapping("/test")
-    @ResponseBody
     public ResponseEntity<DataResponse> test() {
 
         return ResponseEntity.ok(DataResponse.builder().success(true).message("Connection succeeded.").build());
@@ -45,7 +44,6 @@ public class ZoomController {
 
 
     @PostMapping("/post/new")
-    @ResponseBody
     public ResponseEntity<ValidationResponse> zoomPostRequest(@RequestBody ZoomRequest request) {
 
         System.out.println(request);
@@ -62,7 +60,6 @@ public class ZoomController {
     }
 
     @GetMapping("/oauth2/login")
-    @ResponseBody
     public ResponseEntity<DataResponse> getZoomLoginLink() {
         return ResponseEntity.ok(
                 DataResponse.builder()
@@ -73,7 +70,6 @@ public class ZoomController {
     }
 
     @GetMapping("/oauth2/token")
-    @ResponseBody
     public ResponseEntity<DataResponse> setJwtTokenCookie(@RequestParam String code, HttpServletResponse response) {
 
         Optional<String> tokenOptional = this.userService.issueToken(code);

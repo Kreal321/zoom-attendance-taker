@@ -1,12 +1,9 @@
 package me.kreal.attendance.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Builder
@@ -17,8 +14,12 @@ import java.util.List;
 @Entity
 @Table(name = "meeting")
 public class Meeting {
-    // uuid
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "m_id")
+    private Integer mId;
+
+    // uuid
     @Column(name = "meeting_uuid")
     private String meetingUuid;
 
@@ -36,12 +37,13 @@ public class Meeting {
     private Integer type;
 
     @Column(name = "start_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone="America/New_York")
-    private Timestamp startTime;
+    private Long startTime;
 
     @Column(name = "end_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone="America/New_York")
-    private Timestamp endTime;
+    private Long endTime;
+
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
 
     @OneToMany(orphanRemoval = true, mappedBy = "meeting", cascade = CascadeType.ALL)
     private List<Attendance> attendances = new ArrayList<>();
@@ -49,13 +51,15 @@ public class Meeting {
     @Override
     public String toString() {
         return "Meeting{" +
-                "meetingUuid='" + meetingUuid + '\'' +
+                "mId=" + mId +
+                ", meetingUuid='" + meetingUuid + '\'' +
                 ", meetingId='" + meetingId + '\'' +
                 ", hostId='" + hostId + '\'' +
                 ", topic='" + topic + '\'' +
                 ", type=" + type +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
+                ", isDeleted=" + isDeleted +
                 '}';
     }
 }

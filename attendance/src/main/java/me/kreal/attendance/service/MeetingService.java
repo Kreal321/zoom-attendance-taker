@@ -1,5 +1,6 @@
 package me.kreal.attendance.service;
 
+import lombok.Synchronized;
 import me.kreal.attendance.DTO.MeetingDTO;
 import me.kreal.attendance.DTO.ParticipantDTO;
 import me.kreal.attendance.domain.Attendance;
@@ -12,16 +13,12 @@ import me.kreal.attendance.response.MeetingResponse;
 import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.sql.Timestamp;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,23 +44,31 @@ public class MeetingService {
     }
 
     public Optional<Meeting> findMeetingByUuid(String meetingUuid) {
-        return this.meetingRepo.findById(meetingUuid);
+        assert meetingUuid != null;
+        return this.meetingRepo.findByMeetingUuid(meetingUuid);
+    }
+
+    public Optional<Meeting> findMeetingId(Integer mId) {
+        assert mId != null;
+        return this.meetingRepo.findById(mId);
     }
 
     // Advance
+
+    @Synchronized
     public Meeting findOrCreateFrom(MeetingDTO meetingDTO) {
+
         Optional<Meeting> meetingOptional = this.findMeetingByUuid(meetingDTO.getUuid());
 
         if (meetingOptional.isPresent()) return meetingOptional.get();
 
-        Timestamp event_time = new Timestamp(new Date().getTime());
+        long event_time = 0;
         try {
             //        start_time=2023-02-03T21:28:47Z, timezone=America/New_York
             SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
             isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date date = isoFormat.parse(meetingDTO.getStart_time());
-            event_time = new Timestamp(date.getTime());
-            System.out.println(date.getTime());
+            event_time = date.getTime();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,6 +80,7 @@ public class MeetingService {
                 .topic(meetingDTO.getTopic())
                 .type(meetingDTO.getType())
                 .startTime(event_time)
+                .isDeleted(false)
                 .build();
 
         return this.saveMeeting(m);
@@ -82,7 +88,6 @@ public class MeetingService {
 
     public void handleZoomRequest(ZoomRequest request) {
 
-        Timestamp eventTime = new Timestamp(request.getEvent_ts());
         MeetingDTO meetingDTO = request.getPayload().getObject();
 
         ParticipantDTO participantDTO = meetingDTO.getParticipant();
@@ -95,14 +100,14 @@ public class MeetingService {
             case "meeting.started":
                 break;
             case "meeting.ended":
-                m.setEndTime(eventTime);
+                m.setEndTime(request.getEvent_ts());
                 this.saveMeeting(m);
                 break;
             case "meeting.participant_joined":
             case "meeting.participant_left":
                 Participant p = this.participantService.findOrCreateFrom(meetingDTO.getParticipant());
                 Attendance a = this.attendanceService.findOrCreateAttendanceByMeetingAndParticipant(m, p);
-                Event e = this.eventService.findOrCreateEventFromAttendance(a, eventTime, request.getEvent());
+                Event e = this.eventService.findOrCreateEventFromAttendance(a, request.getEvent_ts(), request.getEvent());
 
                 if (a.getEvents().add(e)) this.attendanceService.saveAttendance(a);
 
@@ -142,32 +147,29 @@ public class MeetingService {
 
     public List<MeetingResponse> getAllMeetingsByHostId(String hostId) {
 
-        return this.meetingRepo.findAllByHostIdOrderByStartTimeDesc(hostId).stream()
-                .map(m -> MeetingResponse.builder()
+        return this.meetingRepo.findAllByHostIdAndIsDeletedOrderByStartTimeDesc(hostId, false).stream()
+                .map( m -> MeetingResponse.builder()
+                            .mId(m.getMId())
                             .meetingUuid(m.getMeetingUuid())
                             .meetingId(m.getMeetingId())
-                            .hostId(m.getHostId())
-                            .topic(m.getTopic())
-                            .type(m.getType())
                             .startTime(m.getStartTime())
                             .endTime(m.getEndTime())
+                            .hostId(m.getHostId())
+                            .type(m.getType())
+                            .topic(m.getTopic())
                             .build())
                 .collect(Collectors.toList());
     }
 
-    public Optional<Meeting> findMeetingByMeetingUuid(String uuid) {
-        return this.meetingRepo.findById(uuid);
+    public Optional<Meeting> findMeetingByMIdAndHostId(Integer mId, String hostId) {
+        return this.meetingRepo.findByMIdAndHostIdNotDeleted(mId, hostId);
+
     }
 
-    public Optional<Meeting> findMeetingByMeetingUuidAndHostId(String uuid, String hostId) {
-        return this.meetingRepo.findByMeetingUuidAndHostId(uuid, hostId);
-    }
-
-    public Optional<MeetingResponse> getMeetingDetailByMeetingUuidAndHostId(String uuid, String hostId) {
-        Optional<Meeting> meetingOptional = this.findMeetingByMeetingUuidAndHostId(uuid, hostId);
+    public Optional<MeetingResponse> getMeetingDetailByMIdAndHostId(Integer mId, String hostId) {
+        Optional<Meeting> meetingOptional = this.findMeetingByMIdAndHostId(mId, hostId);
 
         return meetingOptional.map(MeetingResponse::new);
-
     }
 
 }

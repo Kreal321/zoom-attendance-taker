@@ -1,5 +1,6 @@
 package me.kreal.attendance.service;
 
+import lombok.Synchronized;
 import me.kreal.attendance.domain.Attendance;
 import me.kreal.attendance.domain.Event;
 import me.kreal.attendance.repo.EventRepo;
@@ -21,18 +22,20 @@ public class EventService {
 
     // Basic
     public Event saveEvent(Event event) {
-        assert event.getEventId() == null;
+        assert event.getEId() == null;
         assert event.getAttendance() != null;
         return this.eventRepo.save(event);
     }
 
-    public Optional<Event> findEventByAttendanceAndEventTime(Attendance attendance, Timestamp eventTime) {
-        return this.eventRepo.findEventByAttendanceIdAndEventTime(attendance.getAttendanceId(), eventTime);
+    public Optional<Event> findEventByAIdAndEventTime(Integer aId, long eventTime) {
+        return this.eventRepo.findByAIdAndEventTime(aId, eventTime);
     }
 
     // Advance
-    public Event findOrCreateEventFromAttendance(Attendance attendance, Timestamp eventTime, String eventName) {
-        Optional<Event> eventOptional = this.findEventByAttendanceAndEventTime(attendance, eventTime);
+
+    @Synchronized
+    public Event findOrCreateEventFromAttendance(Attendance attendance, long eventTime, String eventName) {
+        Optional<Event> eventOptional = this.findEventByAIdAndEventTime(attendance.getAId(), eventTime);
 
         if (eventOptional.isPresent()) return eventOptional.get();
 

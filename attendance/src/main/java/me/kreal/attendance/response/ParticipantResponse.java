@@ -17,19 +17,15 @@ import javax.persistence.Table;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ParticipantResponse {
 
+    private Integer pId;
     private String participantUuid;
     private String email;
     private String userName;
-    private String firstName;
-    private String lastName;
-    private String preferredName;
 
     public ParticipantResponse(Participant participant) {
+        this.pId = participant.getPId();
         this.participantUuid = participant.getParticipantUuid();
         this.email = participant.getEmail();
         this.userName = participant.getUserName();
-        this.firstName = participant.getFirstName();
-        this.lastName = participant.getLastName();
-        this.preferredName = participant.getPreferredName();
     }
 }

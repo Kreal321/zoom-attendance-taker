@@ -5,7 +5,9 @@ import me.kreal.attendance.domain.Participant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface ParticipantRepo extends JpaRepository<Participant, String> {
+import java.util.Optional;
 
+@Repository
+public interface ParticipantRepo extends JpaRepository<Participant, Integer> {
+    Optional<Participant> findByParticipantUuid(String participantUuid);
 }

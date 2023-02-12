@@ -17,14 +17,14 @@ import java.sql.Timestamp;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventResponse {
 
-    private Integer eventId;
-    private Integer attendanceId;
-    private Timestamp eventTime;
+    private Integer eId;
+    private Integer aId;
+    private Long eventTime;
     private String eventName;
 
     public EventResponse(Event event) {
-        this.eventId = event.getEventId();
-        this.attendanceId = event.getAttendanceId();
+        this.eId = event.getEId();
+        this.aId = event.getAId();
         this.eventTime = event.getEventTime();
         this.eventName = event.getEventName();
     }

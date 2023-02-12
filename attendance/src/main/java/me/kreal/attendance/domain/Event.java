@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 
 @Builder
 @AllArgsConstructor
@@ -17,19 +16,19 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "event_id")
-    private Integer eventId;
+    @Column(name = "e_id")
+    private Integer eId;
 
-    @Column(name = "attendance_id", insertable = false, updatable = false)
-    private Integer attendanceId;
+    @Column(name = "a_id", insertable = false, updatable = false)
+    private Integer aId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    @JoinColumn(name = "attendance_id")
+    @JoinColumn(name = "a_id")
     private Attendance attendance;
 
     @Column(name = "event_time")
-    private Timestamp eventTime;
+    private Long eventTime;
 
     @Column(name = "event_name")
     private String eventName;
@@ -37,8 +36,8 @@ public class Event {
     @Override
     public String toString() {
         return "Event{" +
-                "eventId=" + eventId +
-                ", attendanceId=" + attendanceId +
+                "eId=" + eId +
+                ", attendanceId=" + aId +
                 ", eventTime=" + eventTime +
                 ", eventName='" + eventName + '\'' +
                 '}';

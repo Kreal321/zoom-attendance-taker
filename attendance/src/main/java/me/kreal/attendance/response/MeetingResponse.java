@@ -21,18 +21,18 @@ import java.util.stream.Collectors;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MeetingResponse {
+    private Integer mId;
     private String meetingUuid;
     private String meetingId;
     private String hostId;
     private String topic;
     private Integer type;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a")
-    private Timestamp startTime;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a")
-    private Timestamp endTime;
+    private Long startTime;
+    private Long endTime;
     private List<AttendanceResponse> attendances = new ArrayList<>();
 
     public MeetingResponse(Meeting meeting) {
+        this.mId = meeting.getMId();
         this.meetingUuid = meeting.getMeetingUuid();
         this.meetingId = meeting.getMeetingId();
         this.hostId = meeting.getHostId();

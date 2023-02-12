@@ -1,14 +1,10 @@
 package me.kreal.attendance.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Builder
@@ -22,22 +18,22 @@ public class Attendance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "attendance_id")
-    private Integer attendanceId;
+    @Column(name = "a_id")
+    private Integer aId;
 
-    @Column(name = "meeting_uuid")
-    private String meetingUuid;
+    @Column(name = "m_id")
+    private Integer mId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    @JoinColumn(name = "meeting_uuid", insertable = false, updatable = false)
+    @JoinColumn(name = "m_id", insertable = false, updatable = false)
     private Meeting meeting;
 
-    @Column(name = "participant_uuid", insertable = false, updatable = false)
-    private String participantUuid;
+    @Column(name = "p_id", insertable = false, updatable = false)
+    private Integer pId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "participant_uuid")
+    @JoinColumn(name = "p_id")
     private Participant participant;
 
     @Column
@@ -52,10 +48,11 @@ public class Attendance {
     @Override
     public String toString() {
         return "Attendance{" +
-                "attendanceId=" + attendanceId +
-                ", meetingUuid='" + meetingUuid + '\'' +
-                ", participantUuid='" + participantUuid + '\'' +
+                "aId=" + aId +
+                ", mId=" + mId +
+                ", pId=" + pId +
                 ", duration=" + duration +
+                ", isFinal=" + isFinal +
                 '}';
     }
 }

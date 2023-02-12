@@ -2,6 +2,11 @@
 attendance taker for zoom
 
 ## Version
+### Dev 0.4
+1. Meeting Detail Page
+2. Changing database design and adding new PK
+3. Fixed bug with duplicate keys when creating records
+
 ### Dev 0.3
 1. Redesigned database: add final field for attendance
 2. Redesigned Nav bar

@@ -49,38 +49,47 @@
       <div class="container my-5">
         <div class="row justify-content-center">
 
-            <div class="col-md-12 col-xxl-10 mb-3">
-                <div class="card">
-                    <div class="card-body p-5">
-                      <table id="meeting-table" class="display w-100">
-                        <thead>
-                            <tr>
-                                <th>Meeting UUID</th>
-                                <th>Meeting ID</th>
-                                <th>Host ID</th>
-                                <th>Topic</th>
-                                <th>Type</th>
-                                <th>Start Time</th>
-                                <th>End Time</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                              <th>Meeting UUID</th>
-                              <th>Meeting ID</th>
-                              <th>Host ID</th>
-                              <th>Topic</th>
-                              <th>Type</th>
-                              <th>Start Time</th>
-                              <th>End Time</th>
-                              <th>Actions</th>
-                            </tr>
-                        </tfoot>
-                      </table>
+            <div class="col-md-6 col-xxl-4 mb-3">
 
-                    </div>
+              <div class="card">
+                <div class="card-body p-4">
+                  <h5 class="card-title">Kason Xu's Personal Meeting Room</h5>
+                  <p class="card-text">Sat, Feb 11, 1:48 PM EST</p>
+                  <span class="badge text-bg-primary p-2">#7912880499</span>
+
                 </div>
+
+              </div>
+
+            </div>
+
+            <div class="col-md-6 col-xxl-4 mb-3">
+
+              <div class="card">
+                <div class="card-body p-5">
+                  <table id="participant-table" class="display w-100">
+                    <thead>
+                        <tr>
+                            <th>User name</th>
+                            <th>Email</th>
+                            <th>Duration</th>
+                            <th>Group</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                          <th>User name</th>
+                          <th>Email</th>
+                          <th>Duration</th>
+                          <th>Group</th>
+                          <th>Actions</th>
+                        </tr>
+                    </tfoot>
+                  </table>
+                </div>
+
+              </div>
 
             </div>
 
@@ -109,7 +118,7 @@
 
 
       <!-- Controller -->
-      <script src="/asset/js/controller/meetingAllController.js" ></script>
+      <script src="/asset/js/controller/meetingDetailController.js" ></script>
         
     </body>
 
