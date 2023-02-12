@@ -1,7 +1,65 @@
-const HOST = "http://127.0.0.1:8080";
-// const HOST = "http://api.kreal.me";
+// const HOST = "http://127.0.0.1:8080";
+const HOST = "http://api.kreal.me";
 
 const DOMAIN = "127.0.0.1";
+
+const urlParams = new URLSearchParams(window.location.search);
+
+
+// Timestamp to String
+function convertTimestampToString(ts, type = "normal", tz = "America/New_York") {
+
+    var date = new Date(ts);
+
+    switch (type) {
+        case "normal":
+            return date.toLocaleString('en-US', { 
+                timeZone: tz,
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                timeZoneName: "short",
+                weekday: "short"
+            });
+
+        case "long":
+            return date.toLocaleString('en-US', { 
+                timeZone: tz,
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                timeZoneName: "short",
+                weekday: "short"
+            });
+
+        case "time":
+            return date.toLocaleString('en-US', { 
+                timeZone: tz,
+                hour: 'numeric',
+                minute: 'numeric',
+                timeZoneName: "short"
+            });
+
+        default:
+            return date.toLocaleString('en-US', { 
+                timeZone: tz,
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                timeZoneName: "short",
+                weekday: "short"
+            });
+
+    }
+
+
+
+}
+
 
 // Cookie Helper Functions
 
@@ -37,9 +95,9 @@ async function getDataResponse(url, callback) {
     let response = await fetch(HOST + url , {
         method: 'GET', 
         mode: 'cors',
-        credentials: "include",
         headers: {
-            Accept: 'application/json',
+            accept: 'application/json',
+            authorization: 'Bearer ' + window.localStorage.getItem("token")
         }
     }).catch(error => {
         console.log(error);

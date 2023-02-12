@@ -1,0 +1,19 @@
+.icon-shape {
+    width: 48px;
+    height: 48px;
+    background-position: 50%;
+    border-radius: 0.75rem;
+}
+
+.icon {
+    fill: currentColor;
+    stroke: none;
+    display: inline-block;
+    color: #111;
+}
+
+.icon i {
+    top: 6px;
+    position: relative;
+    font-size: 1.5rem!important;
+}

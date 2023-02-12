@@ -41,10 +41,9 @@ public class JwtProvider {
 
         try {
 
-            String token = Arrays.stream(request.getCookies())
-                    .filter(c -> c.getName().equals("token"))
-                    .map(Cookie::getValue).findFirst()
-                    .orElse("");
+            String prefixedToken = request.getHeader("Authorization");
+            String token = prefixedToken.substring(7); // remove the prefix "Bearer "
+
             Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody(); // decode
 
             String username = claims.getSubject();

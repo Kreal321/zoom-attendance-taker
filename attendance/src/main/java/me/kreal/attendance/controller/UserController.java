@@ -30,7 +30,7 @@ public class UserController {
         return ResponseEntity.ok(
                 DataResponse.builder()
                         .success(true)
-                        .message("Token is valided.")
+                        .message("Token is validated.")
                         .build()
         );
     }

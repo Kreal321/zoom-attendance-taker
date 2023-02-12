@@ -2,6 +2,13 @@
 attendance taker for zoom
 
 ## Version
+### Dev 0.5
+1. Change from cookies to authorization headers
+2. Fix cors preflight 401
+3. Finish meeting detail page
+4. Server Test
+
+
 ### Dev 0.4
 1. Meeting Detail Page
 2. Changing database design and adding new PK

@@ -28,22 +28,21 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Optional<AuthUserDetails> authUserDetailOptional = jwtProvider.resolveToken(request); // extract jwt from request, generate a userdetails object
 
-        String origin = request.getHeader("Origin");
-        response.setHeader("Access-Control-Allow-Origin", origin);
-        response.setHeader("Vary", "Origin");
-
-        // Access-Control-Max-Age
-        response.setHeader("Access-Control-Max-Age", "3600");
-
-        // Access-Control-Allow-Credentials
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-
-        // Access-Control-Allow-Methods
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET");
-
-        // Access-Control-Allow-Headers
-        response.setHeader("Access-Control-Allow-Headers",
-                "Origin, X-Requested-With, Content-Type, Accept, " + "X-CSRF-TOKEN");
+//        String origin = request.getHeader("Origin");
+//        response.setHeader("Access-Control-Allow-Origin", origin);
+//        response.setHeader("Vary", "Origin");
+//
+//        // Access-Control-Max-Age
+//        response.setHeader("Access-Control-Max-Age", "3600");
+//
+//        // Access-Control-Allow-Credentials
+//        response.setHeader("Access-Control-Allow-Credentials", "true");
+//
+//        // Access-Control-Allow-Methods
+//        response.setHeader("Access-Control-Allow-Methods", "POST, GET");
+//
+//        // Access-Control-Allow-Headers
+//        response.setHeader("Access-Control-Allow-Headers", "origin, content-type, authorization, accept");
 
         if (authUserDetailOptional.isPresent()){
             AuthUserDetails authUserDetails = authUserDetailOptional.get();

@@ -11,7 +11,7 @@ CREATE TABLE `participant` (
   `email` varchar(255) DEFAULT NULL,
   `user_name` varchar(255) NOT NULL,
   PRIMARY KEY (`p_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=100000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=100001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `meeting`;
 CREATE TABLE `meeting` (
@@ -25,7 +25,7 @@ CREATE TABLE `meeting` (
   `end_time` long DEFAULT NULL,
   `is_deleted` bit(1) DEFAULT 0,
   PRIMARY KEY (`m_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=100000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=100001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `attendance`;
 CREATE TABLE `attendance` (
@@ -37,7 +37,7 @@ CREATE TABLE `attendance` (
   PRIMARY KEY (`a_id`),
   CONSTRAINT `fk_meeting` FOREIGN KEY (`m_id`) REFERENCES `meeting` (`m_id`),
   CONSTRAINT `fk_participant` FOREIGN KEY (`p_id`) REFERENCES `participant` (`p_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=100000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=100001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `event`;
 CREATE TABLE `event` (
@@ -47,5 +47,5 @@ CREATE TABLE `event` (
   `event_name` varchar(63) NOT NULL,
   PRIMARY KEY (`e_id`),
   CONSTRAINT `fk_attendance` FOREIGN KEY (`a_id`) REFERENCES `attendance` (`a_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=100000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=100001 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

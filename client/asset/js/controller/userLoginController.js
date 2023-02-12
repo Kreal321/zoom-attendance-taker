@@ -1,8 +1,6 @@
 const nav = new Nav("user.login");
 nav.render();
 
-const urlParams = new URLSearchParams(window.location.search);
-
 async function handleZoomOAuth2Request() {
     let response = await fetch(HOST + "/zoom/oauth2/login" , {
         method: 'GET', 
@@ -98,7 +96,7 @@ async function getTokenRequest(code) {
     }
 
     // Success
-    setCookie("token", data.data, 1);
+    window.localStorage.setItem("token", data.data);
     window.location.href = "/";
 
 }
@@ -112,6 +110,6 @@ if (urlParams.get('code') != null) {
 }
 
 // check whether user has logged in
-if (getCookie("token") != null) {
+if (window.localStorage.getItem("token") != null) {
     // window.location.href = "/";
 }

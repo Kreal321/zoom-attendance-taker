@@ -70,7 +70,7 @@ public class ZoomController {
     }
 
     @GetMapping("/oauth2/token")
-    public ResponseEntity<DataResponse> setJwtTokenCookie(@RequestParam String code, HttpServletResponse response) {
+    public ResponseEntity<DataResponse> setJwtTokenCookie(@RequestParam String code) {
 
         Optional<String> tokenOptional = this.userService.issueToken(code);
 
@@ -82,11 +82,6 @@ public class ZoomController {
                             .build()
             );
         }
-
-        Cookie cookie = new Cookie("token", tokenOptional.get());
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        response.addCookie(cookie);
 
         return ResponseEntity.ok(
                 DataResponse.builder()

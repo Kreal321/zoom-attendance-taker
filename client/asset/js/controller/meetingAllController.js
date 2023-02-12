@@ -4,23 +4,6 @@ nav.render();
 const table = $("#meeting-table");
 
 
-function convertTimestampToString(ts, tz = "America/New_York") {
-
-    var date = new Date(ts);
-
-    return date.toLocaleString('en-US', { 
-        timeZone: tz,
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        timeZoneName: "short",
-        weekday: "short"
-    });
-
-
-}
-
 
 function load_datatable(reload = false) {
 
@@ -37,7 +20,7 @@ function load_datatable(reload = false) {
                 item.endTime = convertTimestampToString(item.endTime);
             }
             item.action = `
-                <a class="btn btn-outline-primary" href="/r">View</a>
+                <a class="btn btn-outline-primary" href="/meeting/detail.html?mid=${item.mid}">View</a>
             `;
         });
 
@@ -53,7 +36,7 @@ function load_datatable(reload = false) {
                 { "data": "type", "width": "10%" },
                 { "data": "startTime", "width": "20%" },
                 { "data": "endTime", "width": "20%"},
-                { "data": "action", "searchable": false, "className": "text-right" }],
+                { "data": "action", "sortable": false ,"searchable": false, "className": "text-end" }],
             pagingType: "simple_numbers",
             lengthMenu: [[5, 10, 20, -1], [5, 10, 20, "All"]],
             responsive: true,
